@@ -2,10 +2,12 @@ package com.revisao.ecommerce.controllers;
 
 import java.util.List;
 
+import com.revisao.ecommerce.entities.Produto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.revisao.ecommerce.dto.ProdutoDTO;
 import com.revisao.ecommerce.services.ProdutoService;
@@ -14,8 +16,27 @@ import com.revisao.ecommerce.services.ProdutoService;
 @RequestMapping
 public class ProdutoController {
 
-	@Autowired
-	ProdutoService service;
-	
 
+	private ProdutoService service;
+
+	public ProdutoController(ProdutoService service) {
+		this.service = service;
+	}
+
+	@GetMapping
+	public List<ProdutoDTO> findAll(){
+		return service.findAll();
+	}
+
+	@GetMapping("/pagina")
+	public Page<ProdutoDTO> findpagina(Pageable pagina){
+		return service.findpagina(pagina);
+	}
+
+	@PostMapping("/produto")
+	public ResponseEntity<ProdutoDTO> insert( @RequestBody  ProdutoDTO produtoDTO){
+		produtoDTO = service.insert(produtoDTO);
+		System.out.println(produtoDTO.getPreco());
+		return ResponseEntity.ok(produtoDTO);
+	}
 }
