@@ -6,16 +6,7 @@ import java.util.Set;
 
 import com.revisao.ecommerce.dto.ProdutoDTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,7 +32,7 @@ public class Produto {
 	@JoinTable(name = "tb_produto_categoria", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	private Set<Categoria> categorias = new HashSet<>();
 
-	@OneToMany(mappedBy = "id.produto")
+	@OneToMany(mappedBy = "id.produto", cascade = CascadeType.ALL)
 	private Set<ItemDoPedido> items = new HashSet<>();
 
 	public Produto() {
