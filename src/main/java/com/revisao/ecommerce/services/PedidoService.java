@@ -1,6 +1,8 @@
 package com.revisao.ecommerce.services;
 
+import com.revisao.ecommerce.dto.ItemPedidoDTO;
 import com.revisao.ecommerce.dto.PedidoDTO;
+import com.revisao.ecommerce.entities.ItemDoPedido;
 import com.revisao.ecommerce.entities.Pedido;
 import com.revisao.ecommerce.entities.StatusDoPedido;
 import com.revisao.ecommerce.entities.Usuario;
@@ -8,11 +10,12 @@ import com.revisao.ecommerce.repositories.PedidoRepository;
 import com.revisao.ecommerce.repositories.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PedidoService {
@@ -23,6 +26,19 @@ public class PedidoService {
     public PedidoService(PedidoRepository pedidoRepository, UsuarioRepository usuarioRepository) {
         this.pedidoRepository = pedidoRepository;
         this.usuarioRepository = usuarioRepository;
+    }
+
+    private Set<ItemPedidoDTO> itensDoPedido(Pedido pedido, Long id)  {
+        var pedidoE = pedidoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Não encontrado"));
+        Set<ItemPedidoDTO> itensDoPedido = new HashSet<>();
+
+        for(ItemDoPedido iTp : pedidoE.getItems()){
+            itensDoPedido.add(new ItemPedidoDTO(iTp));
+        }
+
+        return itensDoPedido;
+
     }
 
     public PedidoDTO inserir(PedidoDTO dto) {
@@ -71,7 +87,9 @@ public class PedidoService {
     public PedidoDTO buscarId(Long id){
         Optional<Pedido> pedido = pedidoRepository.findById(id);
         if (pedido.isPresent()) {
-            return new PedidoDTO(pedido.get());
+            var pedidoDTO = new PedidoDTO(pedido.get());
+            pedidoDTO.setItens(itensDoPedido(pedido.get(), id));
+            return pedidoDTO;
         }
         return null;
     }

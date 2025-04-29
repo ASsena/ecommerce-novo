@@ -12,10 +12,10 @@ public class PedidoDTO{
     private Long id;
     private Instant momento;
     private StatusDoPedido status;
-    private Set<ItemDoPedido> itens = new HashSet<>();
+    private Set<ItemPedidoDTO> itens = new HashSet<>();
     private Long clienteId;
 
-    public PedidoDTO(Long id, Instant momento, StatusDoPedido status, Long clienteId, Set<ItemDoPedido> itens) {
+    public PedidoDTO(Long id, Instant momento, StatusDoPedido status, Long clienteId, Set<ItemPedidoDTO> itens) {
         this.clienteId = clienteId;
         this.id = id;
         this.momento = momento;
@@ -31,6 +31,9 @@ public class PedidoDTO{
     }
 
     public PedidoDTO() {
+    }
+
+    public PedidoDTO(ItemDoPedido itemDoPedido) {
     }
 
     public Long getId() {
@@ -65,11 +68,11 @@ public class PedidoDTO{
         this.clienteId = clienteId;
     }
 
-    public Set<ItemDoPedido> getItens() {
+    public Set<ItemPedidoDTO> getItens() {
         return itens;
     }
 
-    public void setItens(Set<ItemDoPedido> itens) {
+    public void setItens(Set<ItemPedidoDTO> itens) {
         this.itens = itens;
     }
 }

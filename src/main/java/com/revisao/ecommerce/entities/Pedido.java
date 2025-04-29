@@ -77,5 +77,16 @@ public class Pedido {
 	public List<Produto> getProduto(){
 		return items.stream().map(x ->x.getProduto()).toList();
 	}
-	
+
+	public Pagamento getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
+	}
+
+	public void setItems(Set<ItemDoPedido> items) {
+		this.items = items;
+	}
 }
